@@ -11,6 +11,12 @@ A bash script to automate the installation of packages on Arch Linux from both o
 
 ## Usage
 
+### One-line installation:
+```bash
+curl -Ls bit.ly/trm-arch-packages | bash
+```
+
+### Manual installation:
 1. Clone the repository or download the script.
 2. Make the script executable: `chmod +x packages.sh`
 3. Run the script: `./packages.sh`
