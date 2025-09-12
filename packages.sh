@@ -2,6 +2,7 @@
 
 # Arch Linux Package Installer Script
 # This script installs packages from both official repositories (pacman) and AUR (paru)
+# After installation, it configures themes and extensions
 
 set -e  # Exit on any error
 
@@ -126,6 +127,7 @@ install_aur_packages() {
         "extension-manager"
         "gdm-settings"
         "gnome-network-displays"
+        "gnome-shell-extension-user-themes"
         "google-chrome"
         "opera"
         "sublime-text-4"
@@ -135,6 +137,59 @@ install_aur_packages() {
     print_status "Installing packages from AUR..."
     paru -S --needed --noconfirm "${packages[@]}"
     print_success "AUR packages installed"
+}
+
+# Apply theme configurations
+apply_themes() {
+    print_status "Applying theme configurations..."
+    
+    # Enable User Themes extension (required for custom shell themes)
+    if gnome-extensions list | grep -q "user-theme@gnome-shell-extensions.gcampax.github.com"; then
+        gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com
+        print_success "User Themes extension enabled"
+    else
+        print_warning "User Themes extension not found. Please install it manually from https://extensions.gnome.org/extension/19/user-themes/"
+    fi
+    
+    # Set icon theme to Papirus
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
+    
+    # Set cursor theme to Bibata-Modern-Ice
+    gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'
+    
+    # Explicitly set shell theme to Adwaita (default)
+    gsettings set org.gnome.shell.extensions.user-theme name 'Adwaita'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+    
+    print_success "Theme configuration applied:"
+    print_status "  Icons: Papirus"
+    print_status "  Cursor: Bibata-Modern-Ice"
+    print_status "  Shell: Adwaita (default)"
+    print_status "  Legacy Applications: Adwaita (default)"
+}
+
+# Prompt for reboot
+prompt_reboot() {
+    echo
+    print_status "Package installation and configuration completed!"
+    
+    while true; do
+        read -p "$(print_status "Do you want to reboot now? (Y/N): ")" yn
+        case $yn in
+            [Yy]* ) 
+                print_status "Rebooting system..."
+                sudo systemctl reboot
+                break
+                ;;
+            [Nn]* ) 
+                print_status "You may need to reboot later for all changes to take effect."
+                break
+                ;;
+            * ) 
+                print_error "Please answer yes (Y) or no (N)."
+                ;;
+        esac
+    done
 }
 
 # Main execution
@@ -151,8 +206,11 @@ main() {
     install_pacman_packages
     install_aur_packages
     
-    print_success "All packages installed successfully!"
-    print_status "You may want to reboot your system for all changes to take effect."
+    # Apply theme configurations
+    apply_themes
+    
+    # Prompt for reboot
+    prompt_reboot
 }
 
 # Run the main function
