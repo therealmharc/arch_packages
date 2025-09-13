@@ -49,3 +49,8 @@ Sets the following visual elements:
 - Script will install paru if not present
 - System updates are performed before package installation
 - Reboot recommended for all changes to take effect
+
+# XAMPP / Laravel installation (Extras):
+```bash
+curl -Ls bit.ly/trm-xampp-install | bash
+```
