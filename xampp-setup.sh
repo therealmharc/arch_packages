@@ -25,9 +25,15 @@ fi
 # Check if we're on Arch Linux
 if ! grep -q "Arch Linux" /etc/os-release 2>/dev/null; then
     print_warning "This script is primarily designed for Arch Linux. Continue at your own risk."
-    read -p "Continue anyway? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    # Only prompt if we have an interactive terminal
+    if [ -t 0 ] && [ -t 1 ]; then
+        read -p "Continue anyway? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    else
+        print_error "Non-Arch Linux detected in non-interactive mode. Aborting."
         exit 1
     fi
 fi
@@ -103,10 +109,16 @@ install_xampp() {
     # Check if XAMPP is already installed
     if [ -f "/opt/lampp/lampp" ]; then
         print_warning "XAMPP appears to be already installed at /opt/lampp"
-        read -p "Do you want to reinstall? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            print_status "Skipping XAMPP installation"
+        # Only prompt if we have an interactive terminal
+        if [ -t 0 ] && [ -t 1 ]; then
+            read -p "Do you want to reinstall? (y/N): " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                print_status "Skipping XAMPP installation"
+                return 0
+            fi
+        else
+            print_warning "Non-interactive shell. Skipping reinstallation of existing XAMPP."
             return 0
         fi
     fi

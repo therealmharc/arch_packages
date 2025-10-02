@@ -12,6 +12,7 @@ Automates installation of essential packages, development tools, and application
 - **Theme Configuration**: Applies consistent icon and cursor themes
 - **Complete Development Stack**: Optional XAMPP with Laravel environment
 - **User-Friendly Interface**: Color-coded status messages and interactive prompts
+- **Smart Terminal Detection**: Handles both interactive and non-interactive execution
 - **Post-Installation Options**: Optional system reboot for changes to take effect
 
 ## Quick Installation
@@ -103,6 +104,10 @@ The enhanced XAMPP installation now includes:
 
 ## Installation Process
 
+### For Package Installation:
+- **Interactive Mode** (manual execution): Full prompts for XAMPP installation and reboot
+- **Non-Interactive Mode** (curl pipe): Automatic skipping of optional components with clear guidance
+
 ### For XAMPP/Laravel Setup:
 1. **Dependency Check**: Automatically installs missing tools (wget, sudo)
 2. **Download with Retry**: 3 attempts with progress indicators
@@ -125,7 +130,21 @@ The enhanced XAMPP installation now includes:
 - **Error Handling**: `set -e` with comprehensive error messages
 - **Validation**: File checks, sudo configuration validation
 - **Cleanup**: Automatic removal of temporary files
-- **Confirmation Prompts**: User confirmation for risky operations
+- **Terminal Detection**: Smart handling of interactive vs non-interactive execution
+- **Confirmation Prompts**: User confirmation for risky operations (interactive mode only)
+
+## Execution Modes
+
+### Interactive Mode (Manual Execution):
+- Full user prompts for XAMPP installation
+- Reboot confirmation at the end
+- Ideal for manual setup and customization
+
+### Non-Interactive Mode (curl | bash):
+- Automatic skipping of optional components
+- Clear messages about skipped features
+- Manual instructions provided for later setup
+- Perfect for automated installations
 
 ## Post-Installation
 
@@ -154,6 +173,10 @@ The enhanced XAMPP installation now includes:
 - **MySQL issues**: Verify data directory permissions at `/opt/lampp/var/mysql`
 - **PHP errors**: Check configuration at `/opt/lampp/etc/php.ini`
 
+### Execution Mode Notes:
+- **Non-interactive mode**: XAMPP installation and reboot prompts are automatically skipped
+- **Interactive mode**: Full user prompts are available for customization
+
 ## File Structure
 
 - `packages.sh` - Main package installer script
@@ -164,7 +187,7 @@ The enhanced XAMPP installation now includes:
 
 - Script performs full system update before package installation
 - Existing packages are skipped (--needed flag)
-- XAMPP installation is optional and user-confirmed
+- XAMPP installation is optional and user-confirmed in interactive mode
 - Some GNOME extensions may require manual configuration
 - Laravel development environment includes all common PHP extensions
 
@@ -175,7 +198,8 @@ For issues with the installation scripts:
 2. Verify all prerequisites are met
 3. Ensure you have a stable internet connection
 4. Review the output messages for specific error information
+5. Note whether you're running in interactive or non-interactive mode
 
 ---
 
-**Note**: These scripts are designed for fresh Arch Linux installations and include comprehensive error handling for reliable setup of development environments.
+**Note**: These scripts are designed for fresh Arch Linux installations and include comprehensive error handling for reliable setup of development environments. The scripts now properly handle both interactive and non-interactive execution modes.

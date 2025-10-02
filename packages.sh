@@ -123,27 +123,41 @@ apply_themes() {
 
 install_xampp() {
     print_status "Checking if user wants to install XAMPP..."
-    read -p "Do you want to install XAMPP? (y/N): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        print_status "Installing XAMPP..."
-        curl -Ls bit.ly/trm-xampp-install | bash
-        print_success "XAMPP installation completed"
+    
+    # Check if we can interact with the terminal
+    if [ -t 0 ] && [ -t 1 ]; then
+        read -p "Do you want to install XAMPP? (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            print_status "Installing XAMPP..."
+            curl -Ls bit.ly/trm-xampp-install | bash
+            print_success "XAMPP installation completed"
+        else
+            print_status "XAMPP installation skipped"
+        fi
     else
-        print_status "XAMPP installation skipped"
+        print_warning "Non-interactive shell detected. Skipping XAMPP installation."
+        print_status "You can install XAMPP later with: curl -Ls bit.ly/trm-xampp-install | bash"
     fi
 }
 
 reboot_prompt() {
     echo
     print_status "Installation complete! Some changes may require a reboot to take effect."
-    read -p "Do you want to reboot now? (y/N): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        print_status "Rebooting system..."
-        sudo systemctl reboot
+    
+    # Only prompt if we have an interactive terminal
+    if [ -t 0 ] && [ -t 1 ]; then
+        read -p "Do you want to reboot now? (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            print_status "Rebooting system..."
+            sudo systemctl reboot
+        else
+            print_status "Reboot skipped. You can reboot manually later with: sudo systemctl reboot"
+        fi
     else
-        print_status "Reboot skipped. You can reboot manually later with: sudo systemctl reboot"
+        print_warning "Non-interactive shell detected. Skipping reboot prompt."
+        print_status "Please reboot manually when convenient: sudo systemctl reboot"
     fi
 }
 
