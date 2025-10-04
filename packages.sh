@@ -78,7 +78,9 @@ install_pacman_packages() {
         "meld"
         "noto-fonts-cjk"
         "noto-fonts-extra"
+        "papers"
         "papirus-icon-theme"
+        "showtime"
         "snapshot"
         "speedtest-cli"
         "sshpass"
@@ -119,6 +121,52 @@ apply_themes() {
     gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
     gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'
     print_success "Theme settings applied"
+}
+
+cleanup_system() {
+    print_status "Starting system cleanup..."
+    
+    # Remove package cache directories
+    local cache_dirs=(
+        "/var/cache/pacman/pkg/"
+        "$HOME/.cache/paru/clone/"
+        "$HOME/.cache/paru/diff"
+    )
+    
+    for dir in "${cache_dirs[@]}"; do
+        if [ -d "$dir" ] || [ -f "$dir" ]; then
+            print_status "Removing: $dir"
+            sudo rm -rf "$dir" 2>/dev/null || true
+        fi
+    done
+    
+    # Remove package orphans
+    remove_package_orphans() {
+        local orphans=$(/usr/bin/pacman -Qtdq)
+        if [ -n "$orphans" ]; then
+            print_status "Removing package orphans..."
+            sudo /usr/bin/pacman -Rns --noconfirm $orphans
+            print_success "Package orphans removed"
+        else
+            print_status "No package orphans found"
+        fi
+    }
+    
+    # Remove Flatpak orphans
+    remove_flatpak_orphans() {
+        if command -v flatpak &> /dev/null; then
+            print_status "Removing Flatpak orphans..."
+            flatpak uninstall -y --noninteractive --unused
+            print_success "Flatpak orphans removed"
+        else
+            print_status "Flatpak not installed, skipping Flatpak orphan removal"
+        fi
+    }
+    
+    remove_package_orphans
+    remove_flatpak_orphans
+    
+    print_success "System cleanup completed"
 }
 
 install_xampp() {
@@ -169,6 +217,7 @@ main() {
     install_pacman_packages
     install_aur_packages
     apply_themes
+    cleanup_system
     install_xampp
     print_success "All packages installed successfully!"
     reboot_prompt

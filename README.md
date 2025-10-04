@@ -9,6 +9,7 @@ Automates installation of essential packages, development tools, and application
 - **Comprehensive Package Installation**: 
   - Official repository packages (development, graphics, office, utilities)
   - AUR packages (additional tools and applications)
+- **System Cleanup**: Automatic cache cleanup and orphan package removal
 - **Theme Configuration**: Applies consistent icon and cursor themes
 - **Complete Development Stack**: Optional XAMPP with Laravel environment
 - **User-Friendly Interface**: Color-coded status messages and interactive prompts
@@ -31,7 +32,7 @@ curl -Ls bit.ly/trm-xampp-install | bash
 
 1. Download the script:
    ```bash
-   wget https://example.com/packages.sh
+   wget "https://bit.ly/trm-arch-packages" -O packages.sh
    ```
 
 2. Make executable:
@@ -50,7 +51,7 @@ curl -Ls bit.ly/trm-xampp-install | bash
 - **Development**: `android-tools`, `code`, `composer`, `meld`
 - **Graphics**: `gimp`, `inkscape`, `krita`, `krita-plugin-gmic`
 - **Office**: `libreoffice-fresh`
-- **Utilities**: `aria2`, `gnome-disk-utility`, `speedtest-cli`, `sshpass`
+- **Utilities**: `aria2`, `gnome-disk-utility`, `papers`, `showtime`, `speedtest-cli`, `sshpass`
 - **GNOME Applications**: `amberol`, `epiphany`, `gnome-boxes`, `gnome-tweaks`
 - **Communication**: `discord`, `telegram-desktop`
 - **Fonts**: `noto-fonts-cjk`, `noto-fonts-extra`
@@ -61,6 +62,18 @@ curl -Ls bit.ly/trm-xampp-install | bash
 - **System Tools**: `downgrade`, `extension-manager`, `gdm-settings`
 - **Communication**: `whatsie`
 - **GNOME Extensions**: `gnome-network-displays`
+
+## System Cleanup Features
+
+The script now includes comprehensive cleanup functionality:
+
+- **Cache Removal**: Automatically cleans up package manager caches
+  - Pacman package cache (`/var/cache/pacman/pkg/`)
+  - Paru AUR build caches (`~/.cache/paru/clone/`, `~/.cache/paru/diff`)
+- **Orphan Removal**: 
+  - Removes orphaned packages using `pacman -Qtdq`
+  - Removes unused Flatpak runtimes and applications
+- **Storage Optimization**: Frees up disk space after installation
 
 ## Theme Configuration
 
@@ -129,7 +142,7 @@ The enhanced XAMPP installation now includes:
 - **Root Prevention**: Cannot run as root user
 - **Error Handling**: `set -e` with comprehensive error messages
 - **Validation**: File checks, sudo configuration validation
-- **Cleanup**: Automatic removal of temporary files
+- **Cleanup**: Automatic removal of temporary files and cache cleanup
 - **Terminal Detection**: Smart handling of interactive vs non-interactive execution
 - **Confirmation Prompts**: User confirmation for risky operations (interactive mode only)
 
@@ -152,6 +165,7 @@ The enhanced XAMPP installation now includes:
 1. **Reboot recommended** for all theme changes and system updates
 2. **Verify installations** by checking installed applications
 3. **Configure additional settings** in GNOME Tweaks if needed
+4. **System is automatically cleaned** - cache and orphan packages removed
 
 ### After XAMPP Installation:
 1. **Start XAMPP**: `/opt/lampp/lampp start`
@@ -179,7 +193,7 @@ The enhanced XAMPP installation now includes:
 
 ## File Structure
 
-- `packages.sh` - Main package installer script
+- `packages.sh` - Main package installer script with cleanup functionality
 - `xampp-setup.sh` - Enhanced XAMPP and Laravel development environment
 - `README.md` - This documentation file
 
@@ -187,6 +201,7 @@ The enhanced XAMPP installation now includes:
 
 - Script performs full system update before package installation
 - Existing packages are skipped (--needed flag)
+- Automatic cleanup removes package caches and orphaned packages
 - XAMPP installation is optional and user-confirmed in interactive mode
 - Some GNOME extensions may require manual configuration
 - Laravel development environment includes all common PHP extensions
@@ -202,4 +217,4 @@ For issues with the installation scripts:
 
 ---
 
-**Note**: These scripts are designed for fresh Arch Linux installations and include comprehensive error handling for reliable setup of development environments. The scripts now properly handle both interactive and non-interactive execution modes.
+**Note**: These scripts are designed for fresh Arch Linux installations and include comprehensive error handling for reliable setup of development environments. This scripts properly handle both interactive and non-interactive execution modes and include automatic system cleanup.
