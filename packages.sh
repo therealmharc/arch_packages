@@ -78,8 +78,11 @@ install_pacman_packages() {
         "meld"
         "noto-fonts-cjk"
         "noto-fonts-extra"
+        "orchis-theme"
         "papers"
         "papirus-icon-theme"
+        "patchelf"
+        "scrcpy"
         "showtime"
         "snapshot"
         "speedtest-cli"
@@ -101,8 +104,9 @@ install_aur_packages() {
         "gdm-settings"
         "gnome-network-displays"
         "google-chrome"
+        "localsend"
         "sublime-text-4"
-        "whatsie"
+        "zapzap"
     )
     
     print_status "Installing packages from AUR..."
@@ -118,8 +122,9 @@ apply_themes() {
     fi
     
     print_status "Applying theme settings..."
-    gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
     gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Orchis-Dark'
     print_success "Theme settings applied"
 }
 
